@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 import torch
 import h5py
 
-from random_noise import random_noise
+from random_noise import random_noise, random_noise_p_r
 
 
 def gen_idx_list(length):
@@ -30,7 +30,7 @@ def load_mat_data_v1(file_name, need_zscore=False):
         target = dataset['target'].T
         target = np.array(target, dtype=np.float32)
         target = torch.from_numpy(target)
-        idx_list = gen_idx_list(target.size()[0])
+        idx_list = gen_idx_list(target.shape[0])
         views_features = {}
         for i in range(data.shape[0]):
             view_feature = data[i][0]
@@ -44,12 +44,7 @@ def load_mat_data_v1(file_name, need_zscore=False):
         dataset = h5py.File(file_name)
         data_hdf5 = dataset['data']
         target_hdf5 = dataset['target']
-        idx_hdf5 = dataset['idx']
-        idx_list = []
-        for idx in idx_hdf5[0]:
-            idx = dataset[idx]
-            idx = np.transpose(idx) - 1
-            idx_list.append(np.array(idx[0], dtype=np.int))
+        idx_list = gen_idx_list(target_hdf5.shape[1])
         target = np.transpose(target_hdf5)
         target = np.array(target, dtype=np.float32)
         target = torch.from_numpy(target)
@@ -110,7 +105,7 @@ def load_mat_data_v2(file_name, need_zscore=False):
             i += 1
     return views_features, target, idx_list
 
-def split_data_set_by_idx(features, labels, idx_list, test_split_id):
+def split_data_set_by_idx(features, labels, idx_list, test_split_id, noise_rate, noise_num):
     train_idx_list = []
     test_idx_list = idx_list[test_split_id]
     for i in range(len(idx_list)):
@@ -126,9 +121,10 @@ def split_data_set_by_idx(features, labels, idx_list, test_split_id):
         train_features[code] = value[train_idx_list]
         test_features[code] = value[test_idx_list]
 
-    train_partial_labels = torch.Tensor(random_noise(train_labels.numpy().copy(), 5))
+    train_partial_labels, noise_nums = random_noise_p_r(train_labels.numpy().copy(), noise_rate=noise_rate, noise_num=noise_num)
+    train_partial_labels = torch.Tensor(train_partial_labels)
+    # train_partial_labels = torch.Tensor(random_noise(train_labels.numpy().copy(), partial_rate))
     return train_features, train_labels, train_partial_labels, test_features, test_labels
-
 
 class ViewsDataset(Dataset):
     def __init__(self, views_features, labels):

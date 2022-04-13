@@ -7,7 +7,7 @@ DATA_SET_NAME = 'emotions.mat'
 TEST_SPLIT_INDEX = 1
 
 ARGS = {}
-ARGS['epoch'] = 10
+ARGS['epoch'] = 25
 ARGS['comm_feature_nums'] = 64
 ARGS['show_epoch'] = 1
 ARGS['epoch_used_for_final_result'] = 4

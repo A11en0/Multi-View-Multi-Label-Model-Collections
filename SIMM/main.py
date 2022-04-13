@@ -24,17 +24,17 @@ print('comm feature num:\t', ARGS['comm_feature_nums'])
 print('optimizer:\t Adam')
 print('*' * 30)
 
-features, labels, idx_list = load_mat_data_v2(os.path.join(DATA_ROOT, DATA_SET_NAME), True)
+features, labels, idx_list = load_mat_data_v1(os.path.join(DATA_ROOT, DATA_SET_NAME), True)
 label_num = np.size(labels, 1)
 metrics_result_list = []
 avg_metrics = {}
 for fold in range(Fold_numbers):
     TEST_SPLIT_INDEX = fold
     print('-' * 50 + '\n' + 'Fold: %s' % fold + '\n')
-    train_features, train_labels, test_features, test_labels = split_data_set_by_idx(features, labels,
-                                                                              idx_list, TEST_SPLIT_INDEX)
+    train_features, train_labels, train_partial_labels, test_features, test_labels = split_data_set_by_idx(
+    features, labels, idx_list, TEST_SPLIT_INDEX, noise_rate=0.3, noise_num=3)
 
-    loss = main_simm_model_train(train_features, train_labels, ARGS,
+    loss = main_simm_model_train(train_features, train_partial_labels, ARGS,
                                  loss_coefficient, model_args, WEIGHT_DECAY, fold)
 
     epoch_to_predict = 10
@@ -62,4 +62,3 @@ print("------------summary--------------")
 for k, v in avg_metrics.items():
     print("{metric}:\t{value}".format(metric=k,
                                       value=v/Fold_numbers))
-
