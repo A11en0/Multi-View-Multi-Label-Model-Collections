@@ -67,7 +67,7 @@ class Model(object):
             if i == tot-1 and summary_writer is not None:
                 if data == "validation":
                     summ, loss_ = sess.run([merged_summary, self.loss], feed_dict=feed_dict)
-                else :
+                else:
                     summ, loss_, accuracy_val = sess.run([merged_summary, self.loss, self.accuracy], feed_dict=feed_dict)
                 summary_writer.add_summary(summ, step)
             else:
@@ -239,3 +239,6 @@ def main():
 if __name__ == '__main__' :
     # np.random.seed(1234)
     main()  # Phew!
+
+
+

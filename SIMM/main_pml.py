@@ -77,6 +77,6 @@ def run(DATA_ROOT, DATA_SET_NAME, noise_rate):
             f.write("{metric}\t{means:.4f}±{std:.4f}".format(metric=metrics_list[i], means=means[i], std=stds[i]))
             f.write("\n")
 
-for dataset in ['']:
+for dataset in ['emotions']:
     for p in [0.3, 0.5, 0.7]:
         run('./', dataset, p)
