@@ -1,4 +1,5 @@
-datasets
-data
-.idea
+datasets/
+data/
+.idea/
 summary
+model/
