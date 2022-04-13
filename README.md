@@ -1,4 +1,4 @@
-# Deep-BR
+# Multi-View Multi-Label Model Collections
 The collection of multi view multi label learning.
 
 # Dependencies
